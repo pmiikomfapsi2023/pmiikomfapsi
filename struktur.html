@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struktur Pengurus - PMII Komfapsi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --blue-main: #0a2540; 
+            --blue-accent: #0284c7;
+            --yellow-main: #f59e0b;
+            --yellow-light: #fef3c7;
+            --bg-color: #f8fafc; 
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.5; overflow-x: hidden; padding-bottom: 60px; }
+        
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        
+        nav { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 16px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.3); position: fixed; width: 100%; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .back-btn { display: flex; align-items: center; gap: 6px; text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
+        .back-btn:hover { color: var(--blue-main); }
+        .back-btn svg { width: 18px; height: 18px; }
+        .title-nav { font-weight: 800; color: var(--blue-main); font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+        .nav-logo { width: 22px; height: auto; }
+
+        .page-header { margin: 100px 20px 30px; text-align: center; }
+        .page-header h1 { font-size: 1.8rem; font-weight: 800; color: var(--blue-main); margin-bottom: 8px; letter-spacing: -0.5px; }
+        .period-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--yellow-light); color: #d97706; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+
+        .container { padding: 0 20px; max-width: 700px; margin: 0 auto; }
+
+        .section-label { font-size: 0.8rem; font-weight: 800; color: var(--blue-accent); text-transform: uppercase; letter-spacing: 1.5px; margin: 35px 0 20px 10px; display: flex; align-items: center; gap: 10px; }
+        .section-label::after { content: ''; height: 1px; flex: 1; background: linear-gradient(to right, #e2e8f0, transparent); }
+
+        /* ====== GRID LAYOUT ====== */
+        .bph-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            padding: 16px 12px; 
+            border-radius: 20px; 
+            border: 1px solid #f1f5f9; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            text-align: center;
+            box-shadow: 0 4px 15px -5px rgba(0,0,0,0.03); 
+            transition: transform 0.2s, box-shadow 0.2s; 
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px -8px rgba(0,0,0,0.06); border-color: #e2e8f0; }
+        
+        /* Pimpinan tetap di tengah, tapi ukurannya SAMA PERSIS dengan 1 kolom */
+        .card-lead {
+            grid-column: span 2; 
+            justify-self: center;
+            width: calc(50% - 7.5px); /* Menyamakan lebar dengan kartu wakil */
+        }
+
+        /* ====== SETINGAN FOTO (PROPORSI PAS FOTO 3x4) ====== */
+        .avatar { 
+            width: 100%; 
+            max-width: 85px; /* Seragam untuk semua */
+            aspect-ratio: 3 / 4; /* Proporsi Pas Foto Vertikal */
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            overflow: hidden; 
+            background-color: #f1f5f9; 
+            box-shadow: 0 4px 12px -3px rgba(0,0,0,0.08); 
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Garis pinggir warna khusus */
+        .avatar-lead { border: 2px solid var(--blue-main); }
+        .avatar-gold { border: 2px solid var(--yellow-main); }
+
+        /* Teks di Bawah Foto */
+        .info-jabatan { font-size: 0.65rem; color: var(--blue-accent); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; margin-bottom: 4px; }
+        .info-nama { font-size: 0.85rem; font-weight: 800; color: var(--text-dark); line-height: 1.3; }
+
+        /* ====== BIDANG & BIRO ====== */
+        .card-bidang { background: var(--card-bg); border-radius: 24px; margin-bottom: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.03); overflow: hidden; }
+        .bidang-header { background: linear-gradient(to right, #f8fafc, #ffffff); padding: 16px 20px; border-bottom: 1px solid #f1f5f9; font-weight: 800; color: var(--blue-main); font-size: 0.95rem; display: flex; align-items: center; gap: 10px; }
+        .bidang-header .icon-dot { width: 8px; height: 8px; background: var(--yellow-main); border-radius: 50%; }
+        
+        .biro-list { padding: 0; list-style: none; }
+        .biro-item { padding: 16px 20px; border-bottom: 1px solid #f8fafc; display: flex; flex-direction: column; }
+        .biro-item:last-child { border-bottom: none; }
+        .biro-name { font-size: 0.85rem; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
+        .biro-member { font-size: 0.85rem; color: var(--text-muted); }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="back-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+            Kembali
+        </a>
+        <div class="title-nav">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Logo_PMII.png" alt="Logo PMII" class="nav-logo">
+            PMII
+        </div>
+    </nav>
+
+    <div class="page-header animate-up">
+        <h1>Struktur</h1>
+        <div class="period-badge">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            Masa Khidmat 2025 - 2026
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="section-label animate-up delay-1"> Badan Pengurus Harian</div>
+        
+        <div class="bph-grid animate-up delay-1">
+            <div class="card card-lead">
+                <div class="avatar avatar-lead">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Foto Ketum">
+                </div>
+                <div class="info-jabatan">Ketua Umum</div>
+                <div class="info-nama">Felix Haris Rumangu</div>
+            </div>
+            
+            <div class="card">
+                <div class="avatar">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="Foto Waketum 1">
+                </div>
+                <div class="info-jabatan">Wakil Ketua 1</div>
+                <div class="info-nama">Zaki Subekti</div>
+            </div>
+            <div class="card">
+                <div class="avatar">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="Foto Waketum 2">
+                </div>
+                <div class="info-jabatan">Wakil Ketua 2</div>
+                <div class="info-nama">Vannesha Dea Adella</div>
+            </div>
+            <div class="card">
+                <div class="avatar">
+                    <img src="https://i.pravatar.cc/150?img=14" alt="Foto Waketum 3">
+                </div>
+                <div class="info-jabatan">Wakil Ketua 3</div>
+                <div class="info-nama">Muhammad Dimaz</div>
+            </div>
+        </div>
+
+        <div class="section-label animate-up delay-2"></div>
+
+        <div class="bph-grid animate-up delay-2">
+            <div class="card card-lead">
+                <div class="avatar avatar-gold">
+                    <img src="https://i.pravatar.cc/150?img=15" alt="Foto Sekum">
+                </div>
+                <div class="info-jabatan">Sekretaris Umum</div>
+                <div class="info-nama">Andi Revy Febrian</div>
+            </div>
+            
+            <div class="card">
+                <div class="avatar">
+                    <img src="https://i.pravatar.cc/150?img=16" alt="Foto Wasek 1">
+            </div>
+                <div class="info-jabatan">Wakil Sekretaris 1</div>
+                <div class="info-nama">Rahmqnul Iqbal</div>
+            </div>
+            <div class="card">
+                <div class="avatar">
+                    <img src="https://i.pravatar.cc/150?img=9" alt="Foto Wasek 2">
+                </div>
+                <div class="info-jabatan">Wakil Sekretaris 2</div>
+                <div class="info-nama">Lovina Fitri Caniago</div>
+            </div>
+            <div class="card">
+                <div class="avatar">
+                    <img src="https://i.pravatar.cc/150?img=18" alt="Foto Wasek 3">
+                </div>
+                <div class="info-jabatan">Wakil Sekretaris 3</div>
+                <div class="info-nama">Dhafir Surya Nugroho</div>
+            </div>
+        </div>
+
+        <div class="section-label animate-up delay-3"></div>
+
+        <div class="bph-grid animate-up delay-3">
+            <div class="card card-lead">
+                <div class="avatar avatar-gold">
+                    <img src="https://i.pravatar.cc/150?img=10" alt="Foto Bendum">
+                </div>
+                <div class="info-jabatan">Bendahara Umum</div>
+                <div class="info-nama">Nurul Wardah Desya</div>
+            </div>
+            
+            <div class="card">
+                <div class="avatar">
+                    <img src="https://i.pravatar.cc/150?img=20" alt="Foto Waben">
+                </div>
+                <div class="info-jabatan">Wakil Bendahara Umum</div>
+                <div class="info-nama">Akmal Rasyid Febrian</div>
+            </div>
+        </div>
+
+        <div class="section-label animate-up delay-4">Bidang</div>
+
+        <div class="card-bidang animate-up delay-4">
+            <div class="bidang-header"><div class="icon-dot"></div> Bidang Internal</div>
+            <ul class="biro-list">
+                <li class="biro-item">
+                    <div class="biro-name">Biro Kaderisasi</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+                <li class="biro-item">
+                    <div class="biro-name">Biro PSDA</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+                <li class="biro-item">
+                    <div class="biro-name">Biro Data Analis</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-bidang animate-up delay-4">
+            <div class="bidang-header"><div class="icon-dot"></div> Bidang Eksternal</div>
+            <ul class="biro-list">
+                <li class="biro-item">
+                    <div class="biro-name">Biro MIK</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+                <li class="biro-item">
+                    <div class="biro-name">Biro Sosmas</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+                <li class="biro-item">
+                    <div class="biro-name">Biro Media Kreatif</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-bidang animate-up delay-4">
+            <div class="bidang-header"><div class="icon-dot"></div> Bidang Minat, Bakat & Keagamaan</div>
+            <ul class="biro-list">
+                <li class="biro-item">
+                    <div class="biro-name">Biro Kajian Literasi</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+                <li class="biro-item">
+                    <div class="biro-name">Biro Keagamaan</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+                <li class="biro-item">
+                    <div class="biro-name">Biro Ekonomi Kreatif</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+                <li class="biro-item">
+                    <div class="biro-name">Biro Seniora</div>
+                    <div class="biro-member">Nama Koordinator / Anggota</div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</body>
+</html>
