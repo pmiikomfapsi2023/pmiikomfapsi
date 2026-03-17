@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMII Komfapsi - Pro System</title>
+    <style>
+        /* === CSS VARIABEL & TEMA (LIGHT & DARK MODE) === */
+        :root {
+            --primary: #004b87; /* Biru PMII */
+            --secondary: #f1c40f; /* Kuning PMII */
+            --bg-body: #f4f7f6;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border: #e0e0e0;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Override Variabel untuk Dark Mode */
+        body.dark-mode {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #f1f1f1;
+            --text-muted: #aaaaaa;
+            --border: #333333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg-body); color: var(--text-main); transition: var(--transition); overflow-x: hidden; }
+
+        /* === NAVIGASI MENGAMBANG === */
+        header {
+            position: fixed; top: 0; width: 100%; background: var(--bg-card);
+            padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1); z-index: 1000; transition: var(--transition);
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .logo span { color: var(--secondary); }
+        nav { display: flex; gap: 1.5rem; align-items: center; }
+        nav button { background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--text-main); font-weight: 600; transition: var(--transition); }
+        nav button:hover, nav button.active { color: var(--primary); border-bottom: 2px solid var(--secondary); }
+        
+        .theme-toggle { background: var(--primary); color: white; padding: 5px 15px; border-radius: 20px; }
+
+        /* === SISTEM ROUTING (SPA) === */
+        .view { display: none; padding-top: 80px; min-height: 100vh; animation: fadeIn 0.4s ease; }
+        .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* === KONTEN BERANDA === */
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+        .hero-banner {
+            background: linear-gradient(135deg, var(--primary), #002244);
+            color: white; padding: 4rem 2rem; border-radius: 15px; text-align: center; margin-bottom: 3rem;
+        }
+        .hero-banner h1 { font-size: 2.5rem; color: var(--secondary); margin-bottom: 1rem; }
+        
+        .btn { padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: var(--transition); }
+        .btn-primary { background: var(--secondary); color: var(--primary); }
+        .btn-primary:hover { background: white; transform: translateY(-3px); }
+
+        /* === TABEL ADMIN (HALAMAN DATA) === */
+        .data-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        .data-table th { background: var(--primary); color: white; }
+        .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); font-style: italic; }
+
+        /* === MODAL FORM === */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; z-index: 2000; transition: var(--transition);
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-box { background: var(--bg-card); padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; position: relative; }
+        .close-btn { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 1.5rem; color: var(--text-muted); }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg-body); color: var(--text-main); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">PMII <span>KOMFAPSI</span></div>
+        <nav>
+            <button onclick="navigate('home')" id="nav-home" class="active">Beranda</button>
+            <button onclick="navigate('admin')" id="nav-admin">Data Kader</button>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓 Mode Gelap</button>
+        </nav>
+    </header>
+
+    <div id="view-home" class="view active">
+        <div class="container">
+            <div class="hero-banner">
+                <h1>Sistem Informasi Kaderisasi</h1>
+                <p>Digitalisasi pendataan dan rekrutmen kader PMII Fakultas Psikologi.</p>
+                <br>
+                <button class="btn btn-primary" onclick="openModal()">+ Daftar MAPABA</button>
+            </div>
+
+            <h2 style="color: var(--primary); border-bottom: 3px solid var(--secondary); display: inline-block; margin-bottom: 1.5rem;">Visi Pergerakan</h2>
+            <p style="color: var(--text-muted); line-height: 1.8;">Sistem ini dibangun untuk memastikan pendataan kader yang rapi, transparan, dan modern. Kami menggabungkan nilai-nilai Dzikir, Fikir, dan Amal Sholeh dengan kemajuan teknologi informasi. Mari berhimpun dan menempa diri di komisariat fapsi!</p>
+        </div>
+    </div>
+
+    <div id="view-admin" class="view">
+        <div class="container">
+            <h2 style="color: var(--primary); margin-bottom: 1rem;">Database Pendaftar MAPABA</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Data di bawah ini ditarik secara *real-time* dari penyimpanan lokal browser (Local Storage).</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Waktu Daftar</th>
+                        <th>Nama Lengkap</th>
+                        <th>NIM</th>
+                        <th>Alasan Bergabung</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-form">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 style="color: var(--primary); margin-bottom: 1.5rem;">Form MAPABA</h3>
+            <form id="form-daftar" onsubmit="handleDaftar(event)">
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="input-nama" required>
+                </div>
+                <div class="form-group">
+                    <label>NIM (Nomor Induk Mahasiswa)</label>
+                    <input type="number" id="input-nim" required>
+                </div>
+                <div class="form-group">
+                    <label>Alasan Bergabung</label>
+                    <input type="text" id="input-alasan" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Simpan Data</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 1. FITUR DARK MODE TAHAN BANTING (Menyimpan preferensi user)
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light'); // Simpan ke browser
+        }
+        
+        // Cek preferensi tema saat web pertama kali dibuka
+        if(localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // 2. SISTEM ROUTING (Pindah Halaman ala SPA)
+        function navigate(viewName) {
+            // Sembunyikan semua halaman
+            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+            // Hilangkan garis bawah aktif di menu
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            
+            // Tampilkan halaman yang dituju
+            document.getElementById(`view-${viewName}`).classList.add('active');
+            document.getElementById(`nav-${viewName}`).classList.add('active');
+
+            // Jika masuk ke halaman admin, refresh tabel datanya
+            if(viewName === 'admin') {
+                renderTable();
+            }
+        }
+
+        // 3. LOGIKA MODAL FORMULIR
+        const modal = document.getElementById('modal-form');
+        function openModal() { modal.classList.add('active'); }
+        function closeModal() { modal.classList.remove('active'); document.getElementById('form-daftar').reset(); }
+
+        // 4. DATABASE SIMULASI (LOCAL STORAGE) & PROSES FORM
+        function handleDaftar(event) {
+            event.preventDefault(); // Cegah layar refresh
+
+            // Ambil nilai dari inputan
+            const nama = document.getElementById('input-nama').value;
+            const nim = document.getElementById('input-nim').value;
+            const alasan = document.getElementById('input-alasan').value;
+            const waktu = new Date().toLocaleString('id-ID'); // Waktu saat ini
+
+            // Buat objek data kader baru
+            const kaderBaru = { waktu, nama, nim, alasan };
+
+            // Ambil data lama dari LocalStorage (jika ada), kalau tidak ada buat Array kosong
+            let dataKader = JSON.parse(localStorage.getItem('db_kader')) || [];
+            
+            // Masukkan data baru ke dalam Array
+            dataKader.push(kaderBaru);
+
+            // Simpan kembali Array yang sudah diupdate ke LocalStorage
+            localStorage.setItem('db_kader', JSON.stringify(dataKader));
+
+            alert(`Alhamdulillah, data Sahabat ${nama} berhasil disimpan sistem!`);
+            closeModal();
+            
+            // Jika user sedang di halaman admin, update tabel seketika
+            if(document.getElementById('view-admin').classList.contains('active')) {
+                renderTable();
+            }
+        }
+
+        // 5. RENDER DATA KE DALAM TABEL ADMIN
+        function renderTable() {
+            const tableBody = document.getElementById('table-body');
+            const dataKader = JSON.parse(localStorage.getItem('db_kader')) || [];
+
+            // Kosongkan isi tabel sebelum diisi ulang
+            tableBody.innerHTML = '';
+
+            if(dataKader.length === 0) {
+                // Jika belum ada pendaftar
+                tableBody.innerHTML = `<tr><td colspan="4" class="empty-state">Belum ada kader yang mendaftar.</td></tr>`;
+                return;
+            }
+
+            // Looping data dan buat baris tabel (<tr>)
+            dataKader.forEach(kader => {
+                const baris = `
+                    <tr>
+                        <td style="font-size: 0.85rem; color: var(--text-muted);">${kader.waktu}</td>
+                        <td style="font-weight: bold; color: var(--primary);">${kader.nama}</td>
+                        <td>${kader.nim}</td>
+                        <td>${kader.alasan}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += baris;
+            });
+        }
+    </script>
+</body>
+</html>
