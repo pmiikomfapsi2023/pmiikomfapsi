@@ -3,65 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PMII Komfapsi - Beranda</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>PMII Komfapsi - Portal Modern</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --pmii-blue: #093f68; --pmii-yellow: #f1c40f; --bg-light: #f8f9fa; --text-main: #2d3436; }
+        :root { 
+            --blue-main: #0a2540; 
+            --blue-light: #e0f2fe;
+            --blue-accent: #0284c7;
+            --yellow-main: #f59e0b;
+            --yellow-light: #fef3c7;
+            --bg-color: #f8fafc; 
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-main); line-height: 1.6; }
+        body { background-color: var(--bg-color); color: var(--text-dark); line-height: 1.5; overflow-x: hidden; }
         
-        /* Navbar */
-        nav { background: white; padding: 15px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: fixed; width: 100%; top: 0; z-index: 100; text-align: center; }
-        .logo { font-size: 1.2rem; font-weight: 700; color: var(--pmii-blue); }
-        .logo span { color: var(--pmii-yellow); }
+        /* Animasi Masuk */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
         
-        /* Hero Section */
-        .hero { margin-top: 60px; background: linear-gradient(135deg, var(--pmii-blue) 0%, #1a5c8f 100%); color: white; padding: 80px 20px; text-align: center; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; }
-        .hero h1 { font-size: 2.2rem; margin-bottom: 15px; line-height: 1.2; }
-        .hero p { font-size: 1rem; opacity: 0.9; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        /* Navbar Glassmorphism (Efek Kaca) */
+        nav { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            padding: 16px 24px; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3); 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            z-index: 100; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .brand-wrapper { display: flex; align-items: center; gap: 10px; }
+        .nav-logo { width: 28px; height: auto; }
+        .brand-text { font-weight: 800; color: var(--blue-main); font-size: 1.1rem; letter-spacing: -0.5px; }
+        .brand-text span { color: var(--yellow-main); }
+        .status-dot { width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
+
+        /* Hero Section Modern */
+        .hero { 
+            margin: 90px 20px 30px; 
+            background: linear-gradient(135deg, var(--blue-main) 0%, #1e3a8a 100%); 
+            color: white; 
+            padding: 40px 24px; 
+            border-radius: 28px; /* Melengkung ala iOS */
+            text-align: left; 
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -15px rgba(10, 37, 64, 0.3);
+        }
+        /* Efek cahaya di latar belakang hero */
+        .hero::after {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px; background: var(--yellow-main); border-radius: 50%; filter: blur(80px); opacity: 0.4;
+        }
+
+        .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 12px; line-height: 1.2; letter-spacing: -1px; }
+        .hero p { font-size: 0.95rem; color: #cbd5e1; max-width: 90%; line-height: 1.6; font-weight: 400; margin-bottom: 0; }
+
+        /* Bento Grid UI (Menu ala Widget) */
+        .bento-container { padding: 0 20px 40px; max-width: 800px; margin: 0 auto; }
+        .bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px;}
         
-        /* Menu Navigasi Kotak */
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 30px 20px; max-width: 600px; margin: 0 auto; }
-        .menu-item { background: white; padding: 25px 15px; border-radius: 20px; text-align: center; text-decoration: none; color: var(--pmii-blue); box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.2s; border: 2px solid transparent; }
-        .menu-item:hover, .menu-item:active { transform: translateY(-5px); border-color: var(--pmii-yellow); }
-        .menu-icon { font-size: 2rem; margin-bottom: 10px; }
-        .menu-title { font-weight: 700; font-size: 0.95rem; }
+        .bento-card { 
+            background: var(--card-bg); 
+            padding: 24px 20px; 
+            border-radius: 24px; 
+            text-decoration: none; 
+            border: 1px solid #f1f5f9; 
+            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.03); 
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+        }
+        .bento-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.08); border-color: #e2e8f0; }
         
-        footer { text-align: center; padding: 20px; font-size: 0.8rem; color: gray; margin-top: 20px; }
+        /* Ikon dengan background bulat */
+        .icon-box { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transition: transform 0.3s ease; }
+        .bento-card:hover .icon-box { transform: scale(1.05) rotate(-5deg); }
+        .icon-blue { background-color: var(--blue-light); color: var(--blue-accent); }
+        .icon-yellow { background-color: var(--yellow-light); color: var(--yellow-main); }
+        
+        .icon-box svg { width: 24px; height: 24px; }
+        
+        .bento-title { font-weight: 700; font-size: 1rem; color: var(--text-dark); margin-bottom: 4px; }
+        .bento-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+
+        /* Kartu Horizontal (Memanjang) */
+        .bento-card-wide { grid-column: span 2; flex-direction: row; align-items: center; justify-content: space-between; padding: 20px 24px; background: linear-gradient(to right, #ffffff, #f8fafc); }
+        .bento-card-wide .content-wrapper { display: flex; align-items: center; gap: 16px; }
+        .btn-modern { background: var(--blue-main); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-modern:hover { background: #1e3a8a; }
+
+        /* Footer */
+        footer { text-align: center; padding: 30px 20px; margin-top: 20px; }
+        .footer-text { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+
+        /* Responsif */
+        @media (min-width: 600px) {
+            .hero { padding: 60px 40px; margin: 100px 20px 40px; }
+            .hero h1 { font-size: 3rem; }
+        }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">PMII <span>Komfapsi</span></div>
+        <div class="brand-wrapper">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Logo_PMII.png" alt="Logo PMII" class="nav-logo">
+            <div class="brand-text">PMII <span>KOMFAPSI</span></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">
+            <span class="status-dot"></span> Sistem Aktif
+        </div>
     </nav>
 
-    <header class="hero">
-        <h1>Modernisasi Gerakan,<br>Akselerasi Pemikiran</h1>
-        <p>Selamat datang di portal resmi PMII Komfapsi. Wadah kaderisasi yang mengedepankan pendekatan keilmuan, analitis, dan adaptif terhadap perkembangan zaman.</p>
-    </header>
-
-    <div class="menu-grid">
-        <a href="struktural.html" class="menu-item">
-            <div class="menu-icon">👥</div>
-            <div class="menu-title">Struktur Pengurus</div>
-        </a>
-        <a href="kurikulum.html" class="menu-item">
-            <div class="menu-icon">📚</div>
-            <div class="menu-title">Kurikulum Kaderisasi</div>
-        </a>
-        <a href="https://instagram.com" target="_blank" class="menu-item">
-            <div class="menu-icon">📸</div>
-            <div class="menu-title">Media Sosial</div>
-        </a>
-        <a href="https://wa.me/6281234567890" target="_blank" class="menu-item">
-            <div class="menu-icon">💬</div>
-            <div class="menu-title">Hubungi Kami</div>
-        </a>
+    <div class="hero animate-up">
+        <div class="hero-badge">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            Transformasi 2026
+        </div>
+        <h1>Modernisasi<br>Pergerakan.</h1>
+        <p>Ekosistem digital PMII Komfapsi. Mewujudkan manajemen organisasi yang lincah, saintifik, dan adaptif.</p>
     </div>
 
-    <footer>
-        &copy; 2026 PMII Komfapsi.
+    <div class="bento-container">
+        
+        <div class="bento-grid">
+            
+            <a href="struktural.html" class="bento-card animate-up delay-1">
+                <div class="icon-box icon-blue">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <div class="bento-title">Direktori Pengurus</div>
+                <div class="bento-desc">Formasi struktural BPH & birokom</div>
+            </a>
+
+            <a href="kurikulum.html" class="bento-card animate-up delay-1">
+                <div class="icon-box icon-yellow">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                </div>
+                <div class="bento-title">Modul Kurikulum</div>
+                <div class="bento-desc">Basis kaderisasi & kajian saintifik</div>
+            </a>
+
+            <a href="#" class="bento-card animate-up delay-2">
+                <div class="icon-box icon-blue" style="background: #f1f5f9; color: #475569;">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <div class="bento-title">E-Formulir</div>
+                <div class="bento-desc">Pendaftaran & registrasi</div>
+            </a>
+
+            <a href="https://instagram.com" target="_blank" class="bento-card animate-up delay-2">
+                <div class="icon-box icon-yellow" style="background: #fee2e2; color: #ef4444;">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                </div>
+                <div class="bento-title">Instagram</div>
+                <div class="bento-desc">Jejaring media sosial</div>
+            </a>
+
+            <div class="bento-card bento-card-wide animate-up delay-3">
+                <div class="content-wrapper">
+                    <div class="icon-box icon-blue" style="margin-bottom: 0; background: #dcfce7; color: #16a34a;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="bento-title">Hubungi Kami</div>
+                        <div class="bento-desc">Layanan komunikasi WhatsApp</div>
+                    </div>
+                </div>
+                <a href="https://wa.me/6281234567890" target="_blank"><button class="btn-modern">Chat</button></a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="animate-up delay-3">
+        <div class="footer-text">
+            Masa Khidmat 2025 - 2026<br>
+            © PMII Komisariat Komfapsi.
+        </div>
     </footer>
 
 </body>
